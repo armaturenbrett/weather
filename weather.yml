@@ -1,0 +1,3 @@
+weather:
+  api_key: '6e99fc668706fcd9ccdb1dffb7a2cc65'
+  location: 'Berlin,DE'

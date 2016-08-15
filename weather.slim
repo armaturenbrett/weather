@@ -1,0 +1,29 @@
+.weather data-data="#{WidgetDatum.find('weather').data.to_json}"
+  .details
+    .temperature
+      span.value
+        | {{weather.current.temperature}}
+      span.unit
+        | °C
+        = fa_icon('tachometer')
+    .rain
+      span.value
+        | {{weather.current.rain}}
+      span.unit
+        | mm
+        = fa_icon('tint')
+  svg width='100%' height='100%' viewbox='0 0 8 100' preserveAspectRatio='none'
+    g.temperature
+      path d='M0 100 {{#weather.history.temperatures}}L{{x}} {{y}} {{/weather.history.temperatures}} L8 100 Z'
+  .labels
+    .y
+      .temperature
+        | {{#labels.y.temperature}}
+        span.label style='bottom: {{position}}%;'
+          | {{label}}
+        | {{/labels.y.temperature}}
+    .x
+      | {{#labels.x}}
+      span.label style='left: {{position}}%;'
+        | {{label}}
+      | {{/labels.x}}
