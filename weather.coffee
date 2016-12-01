@@ -1,13 +1,13 @@
 App.widget_data = App.cable.subscriptions.create channel: 'WidgetDataChannel', widget: 'weather',
   connected: ->
-    console.log('connected')
+    console.log('weather connected')
 
   disconnected: ->
-    console.log('disconnected')
+    console.log('weather disconnected')
     window.weatherWidget.resetTemplate()
 
   received: (data) ->
-    console.log('received data:', data)
+    console.log('weather received data:', data)
     window.weatherWidget.renderData(data)
 
 class WeatherWidget
