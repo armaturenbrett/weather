@@ -15,6 +15,10 @@
   svg width='100%' height='100%' viewbox='0 0 8 100' preserveAspectRatio='none'
     g.temperature
       path d='M0 100 {{#weather.history.temperatures}}L{{x}} {{y}} {{/weather.history.temperatures}} L8 100 Z'
+    g.rain
+      | {{#weather.history.rain}}
+      |   <rect width="0.9" x="{{x}}" y="{{y}}" height="{{height}}" />
+      | {{/weather.history.rain}}
   .labels
     .y
       .temperature
@@ -22,6 +26,11 @@
         span.label style='bottom: {{position}}%;'
           | {{label}}
         | {{/labels.y.temperature}}
+      .rain
+        | {{#labels.y.rain}}
+        span.label style='bottom: {{position}}%;'
+          | {{label}}
+        | {{/labels.y.rain}}
     .x
       | {{#labels.x}}
       span.label style='left: {{position}}%;'

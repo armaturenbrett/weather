@@ -19,25 +19,32 @@ $widget_scheduler.every '15m', first_in: '5s' do
     labels: {
       x: [],
       y: {
-        temperature: []
+        temperature: [],
+        rain: []
       }
     }
   }
 
   temperatures = response['list'].map { |i| i['main']['temp'] - 273.15 }[0..8]
+  rains = []
+  response['list'].each_with_index do |value, i|
+    rain = value['rain']['3h'].to_f
+    rains << rain
+  end
 
   response['list'][0..8].each_with_index do |data_point, i|
     temperature = data_point['main']['temp'] - 273.15
-    rain = data_point['rain']['3h'] rescue 0.0
+    rain = data_point['rain']['3h'].to_f
     data[:weather][:current] = {
       temperature: number_with_precision(temperature, precision: 1).tr('.', ','),
       rain: number_with_precision(rain, precision: 1).tr('.', ',')
     } if i.zero?
 
-    temperature_value = 100 - ((100.0 / (temperatures.max - temperatures.min)) * (temperature - temperatures.min))
+    temperature_value = (100.0 / (temperatures.max - temperatures.min)) * (temperature - temperatures.min)
+    rain_value = (100.0 / (rains.max - rains.min)) * (rain - rains.min)
 
-    data[:weather][:history][:temperatures] << { x: i, y: temperature_value.round(0) }
-    data[:weather][:history][:rain] << rain
+    data[:weather][:history][:temperatures] << { x: i, y: (100 - temperature_value) }
+    data[:weather][:history][:rain] << { x: i + 0.05, y: (100 - rain_value), height: rain_value }
 
     data[:labels][:x] << {
       label: Time.at(data_point['dt']).to_datetime.strftime('%H:%M'),
@@ -48,7 +55,14 @@ $widget_scheduler.every '15m', first_in: '5s' do
   (temperatures.min.round(0)..temperatures.max.round(0)).each_with_index do |temperature, i|
     data[:labels][:y][:temperature] << {
       label: "#{temperature} °C",
-      position: (i * (100.0 / (temperatures.max - temperatures.min + 1))).round(2)
+      position: (i * (100.0 / (temperatures.max - temperatures.min))).round(2)
+    }
+  end
+
+  ((rains.min * 10).round(0)..(rains.max * 10).round(0)).each_with_index do |rain, i|
+    data[:labels][:y][:rain] << {
+      label: "#{(rain / 10.0).round(1)} mm",
+      position: (i * (100.0 / (10 * (rains.max - rains.min)))).round(2)
     }
   end
 
