@@ -28,13 +28,13 @@ $widget_scheduler.every '15m', first_in: '5s' do
   temperatures = response['list'].map { |i| i['main']['temp'] - 273.15 }[0..8]
   rains = []
   response['list'].each_with_index do |value, i|
-    rain = value['rain']['3h'].to_f
+    rain = value['rain']['3h'].to_f rescue 0.0
     rains << rain
   end
 
   response['list'][0..8].each_with_index do |data_point, i|
     temperature = data_point['main']['temp'] - 273.15
-    rain = data_point['rain']['3h'].to_f
+    rain = data_point['rain']['3h'].to_f rescue 0.0
     data[:weather][:current] = {
       temperature: number_with_precision(temperature, precision: 1).tr('.', ','),
       rain: number_with_precision(rain, precision: 1).tr('.', ',')
