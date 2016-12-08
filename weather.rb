@@ -59,10 +59,12 @@ $widget_scheduler.every '15m', first_in: '5s' do
     }
   end
 
-  ((rains.min * 10).round(0)..(rains.max * 10).round(0)).each_with_index do |rain, i|
+  rain_label_scale = 1.0
+
+  ((rains.min * rain_label_scale).round(0)..(rains.max * rain_label_scale).round(0)).each_with_index do |rain, i|
     data[:labels][:y][:rain] << {
-      label: "#{(rain / 10.0).round(1)} mm",
-      position: (i * (100.0 / (10 * (rains.max - rains.min)))).round(2)
+      label: "#{(rain / rain_label_scale).round(1).to_s.tr('.', ',')} mm",
+      position: (i * (100.0 / (rain_label_scale * (rains.max - rains.min)))).round(2)
     }
   end
 
