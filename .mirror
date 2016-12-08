@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./bin/helpers/message "MIRROR"
+echo "MIRROR"
 
 mkdir -p ~/.ssh
 cat >> ~/.ssh/id_rsa << EOF
@@ -8,4 +8,4 @@ $SSH_MIRROR_KEY
 EOF
 chmod 0600 ~/.ssh/id_rsa
 ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-git push --mirror git@github.com:armaturenbrett/armaturenbrett.git
+git push --mirror git@github.com:armaturenbrett/weather.git
