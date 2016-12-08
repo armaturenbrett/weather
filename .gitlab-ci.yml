@@ -6,6 +6,6 @@ stages:
 mirror:
   stage: mirror
   script:
-    - bin/mirror
+    - ./.mirror
   only:
     - master
